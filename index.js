@@ -11,8 +11,22 @@ app.get('/', function (req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
+const multer  = require('multer');
+const upload = multer({ dest: './public/data/uploads/' });
+app.post('/api/fileanalyse', upload.single('upfile'),(req, res) => {
+  //console.log(req.file);
+  res.json({
+    "name": req.file.originalname,
+    "type": req.file.mimetype,
+    "size": req.file.size
+  });
+});
 
-
+ // 404-NOT FOUND Middleware
+ app.use(function(req, res, next){
+  res.status(404);
+  res.type('txt').send('Not found');
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, function () {
